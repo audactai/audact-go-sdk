@@ -1,0 +1,92 @@
+version: "2"
+
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  default: none
+  enable:
+    # Correctness
+    - govet
+    - errcheck
+    - staticcheck
+    - ineffassign
+    - unused
+    # Style / quality
+    - misspell
+    - revive
+    - godot
+    - whitespace
+    # Security
+    - gosec
+    # Performance
+    - prealloc
+    # Error handling
+    - wrapcheck
+    - errorlint
+
+  settings:
+    errcheck:
+      check-type-assertions: true
+
+    govet:
+      enable-all: true
+      disable:
+        - shadow
+        - fieldalignment
+
+    revive:
+      rules:
+        # Every exported identifier needs a doc comment, because pkg.go.dev
+        # renders them. The stutter check is off so that existing public names
+        # such as AudactValidationMeta stay as they are.
+        - name: exported
+          arguments:
+            - disableStutteringCheck
+        - name: error-return
+        - name: error-strings
+        - name: var-naming
+        - name: unreachable-code
+
+    staticcheck:
+      checks:
+        - "all"
+        - "-ST1000"
+        - "-ST1003"
+        - "-ST1020"
+
+    wrapcheck:
+      ignore-sigs:
+        - .Errorf(
+        - errors.New(
+        - errors.Unwrap(
+        - .WithMessage(
+        - .WithStack(
+
+  exclusions:
+    rules:
+      # Test files: relax correctness, wrapping, and security rules.
+      - path: "_test\\.go$"
+        linters:
+          - errcheck
+          - wrapcheck
+          - gosec
+      # Test files: SA5011 false-positives. Some staticcheck builds do not model
+      # t.Fatal as terminating, so the common `if x == nil { t.Fatal(...) }`
+      # guard followed by a dereference is wrongly flagged as a possible nil
+      # dereference. In tests a genuine nil dereference just panics visibly.
+      - path: "_test\\.go$"
+        linters:
+          - staticcheck
+        text: "SA5011"
+      # Unused params in test stubs are intentional interface signatures.
+      - path: "_test\\.go$"
+        linters:
+          - revive
+        text: "unused-parameter"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
