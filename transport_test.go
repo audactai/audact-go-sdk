@@ -58,7 +58,7 @@ func TestTransportAuthAndHeaders(t *testing.T) {
 			if h := got.Header.Get("Authorization"); h != tc.want {
 				t.Fatalf("auth %q want %q", h, tc.want)
 			}
-			if ua := got.Header.Get("User-Agent"); ua != "audact-go/0.3.0 myapp/1.0" {
+			if ua := got.Header.Get("User-Agent"); ua != "audact-go/"+Version+" myapp/1.0" {
 				t.Fatalf("ua %q", ua)
 			}
 			if got.Header.Get("Accept") != "application/json" || got.Header.Get("Content-Type") != "application/json" {

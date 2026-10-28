@@ -82,7 +82,8 @@ type PolicyQuietWindow struct {
 type PolicyRuleCondition struct {
 	Field    string `json:"field,omitempty"`
 	Operator string `json:"operator,omitempty"`
-	Value    string `json:"value,omitempty"`
+	// The operand. After decoding it is a string, float64, bool or []any of strings.
+	Value any `json:"value,omitempty"`
 }
 
 // PolicyUseCase is a use case in a policy file.

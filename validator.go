@@ -17,6 +17,10 @@ func (s *ValidatorService) Validate(ctx context.Context, req *ValidateRequest) (
 
 // FinalizeScore computes the aggregate compliance score for a completed call.
 // Calls POST /v1/calls/{call_id}/finalize-score.
+//
+// Deprecated: POST /v1/calls/{call_id}/finalize-score is an internal endpoint
+// and is not routed on the public API, so this method returns 404 against
+// api.audact.ai. It will be removed in a future release.
 func (s *ValidatorService) FinalizeScore(ctx context.Context, callID string, req *FinalizeScoreRequest) (*FinalizeScoreResponse, error) {
 	var out FinalizeScoreResponse
 	if _, err := s.t.do(ctx, http.MethodPost, "/calls/"+url.PathEscape(callID)+"/finalize-score", authAPIKey, nil, orEmpty(req), &out); err != nil {

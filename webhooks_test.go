@@ -25,7 +25,7 @@ func TestWebhooksService(t *testing.T) {
 	}{
 		{"list", 200, `{"items":[{"id":"w1","url":"https://x"}],"has_more":true,"next_cursor":"n"}`,
 			func(c *audact.Client) (any, error) { return c.Webhooks.List(context.Background(), nil) },
-			"GET", "/v1/webhooks", "", ``, `{"items":[{"id":"w1","url":"https://x"}],"has_more":true,"next_cursor":"n"}`},
+			"GET", "/v1/webhooks", "", ``, `{"items":[{"id":"w1","is_active":false,"url":"https://x"}],"has_more":true,"next_cursor":"n"}`},
 		{"list params", 200, `{}`,
 			func(c *audact.Client) (any, error) {
 				return c.Webhooks.List(context.Background(), &audact.ListWebhooksParams{Limit: 2, Cursor: "c"})
@@ -33,17 +33,22 @@ func TestWebhooksService(t *testing.T) {
 			"GET", "/v1/webhooks", "cursor=c&limit=2", ``, `{}`},
 		{"create", 201, `{"id":"w1","signing_secret":"s"}`,
 			func(c *audact.Client) (any, error) {
-				return c.Webhooks.Create(context.Background(), &audact.CreateWebhookRequest{URL: "https://x", Events: []audact.WebhookEventType{audact.WebhookEventCallEnded}}, "")
+				return c.Webhooks.Create(context.Background(), &audact.CreateWebhookRequest{URL: "https://x", Scope: audact.WebhookScopeAccount, Events: []audact.WebhookEventType{audact.WebhookEventCallEnded}}, "")
 			},
-			"POST", "/v1/webhooks", "", `{"url":"https://x","events":["call_ended"]}`, `{"id":"w1","signing_secret":"s"}`},
+			"POST", "/v1/webhooks", "", `{"url":"https://x","scope":"account","events":["call_ended"]}`, `{"id":"w1","is_active":false,"signing_secret":"s"}`},
 		{"get escapes", 200, `{"id":"a/b"}`,
 			func(c *audact.Client) (any, error) { return c.Webhooks.Get(context.Background(), "a/b") },
-			"GET", "/v1/webhooks/a%2Fb", "", ``, `{"id":"a/b"}`},
+			"GET", "/v1/webhooks/a%2Fb", "", ``, `{"id":"a/b","is_active":false}`},
 		{"update omits unset", 200, `{"id":"w1"}`,
 			func(c *audact.Client) (any, error) {
 				return c.Webhooks.Update(context.Background(), "w1", &audact.UpdateWebhookRequest{IsActive: new(bool)})
 			},
-			"PUT", "/v1/webhooks/w1", "", `{"is_active":false}`, `{"id":"w1"}`},
+			"PUT", "/v1/webhooks/w1", "", `{"is_active":false}`, `{"id":"w1","is_active":false}`},
+		{"update url only omits is_active", 200, `{"id":"w1","is_active":true}`,
+			func(c *audact.Client) (any, error) {
+				return c.Webhooks.Update(context.Background(), "w1", &audact.UpdateWebhookRequest{URL: "https://y"})
+			},
+			"PUT", "/v1/webhooks/w1", "", `{"url":"https://y"}`, `{"id":"w1","is_active":true}`},
 		{"delete 204", 204, ``,
 			func(c *audact.Client) (any, error) { return nil, c.Webhooks.Delete(context.Background(), "w1") },
 			"DELETE", "/v1/webhooks/w1", "", ``, ``},

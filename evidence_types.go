@@ -71,10 +71,11 @@ type ListComplianceEventsResponse struct {
 
 // PostEventRequest is the body for writing an evidence event.
 type PostEventRequest struct {
-	CallID    string `json:"call_id,omitempty"`
-	Data      string `json:"data,omitempty"`
-	EventType string `json:"event_type,omitempty"`
-	TenantID  string `json:"tenant_id,omitempty"`
+	CallID string `json:"call_id,omitempty"`
+	// The event payload; must be valid JSON (an object, usually).
+	Data      json.RawMessage `json:"data,omitempty"`
+	EventType string          `json:"event_type,omitempty"`
+	TenantID  string          `json:"tenant_id,omitempty"`
 }
 
 // PostEventResponse is the hash receipt for a written evidence event.
@@ -123,14 +124,15 @@ type ReconstructedEvent struct {
 	CallID            string                  `json:"call_id,omitempty"`
 	ComplianceReceipt *EventComplianceReceipt `json:"compliance_receipt,omitempty"`
 	ConfigSealHash    string                  `json:"config_seal_hash,omitempty"`
-	Data              string                  `json:"data,omitempty"`
-	EventID           string                  `json:"event_id,omitempty"`
-	EventType         string                  `json:"event_type,omitempty"`
-	Hash              string                  `json:"hash,omitempty"`
-	PreviousHash      string                  `json:"previous_hash,omitempty"`
-	Sequence          int                     `json:"sequence,omitempty"`
-	TenantID          string                  `json:"tenant_id,omitempty"`
-	Timestamp         string                  `json:"timestamp,omitempty"`
+	// The event payload exactly as stored, as raw JSON.
+	Data         json.RawMessage `json:"data,omitempty"`
+	EventID      string          `json:"event_id,omitempty"`
+	EventType    string          `json:"event_type,omitempty"`
+	Hash         string          `json:"hash,omitempty"`
+	PreviousHash string          `json:"previous_hash,omitempty"`
+	Sequence     int             `json:"sequence,omitempty"`
+	TenantID     string          `json:"tenant_id,omitempty"`
+	Timestamp    string          `json:"timestamp,omitempty"`
 }
 
 // ResolvedConfigVersion is a tenant configuration version in effect during a call.
@@ -186,14 +188,15 @@ type ListViolationsParams struct {
 
 // ViolationRecord is one violation evidence event.
 type ViolationRecord struct {
-	CallID    string `json:"call_id,omitempty"`
-	Data      string `json:"data,omitempty"`
-	EventID   string `json:"event_id,omitempty"`
-	EventType string `json:"event_type,omitempty"`
-	Hash      string `json:"hash,omitempty"`
-	Sequence  int    `json:"sequence,omitempty"`
-	TenantID  string `json:"tenant_id,omitempty"`
-	Timestamp string `json:"timestamp,omitempty"`
+	CallID string `json:"call_id,omitempty"`
+	// The violation payload as raw JSON.
+	Data      json.RawMessage `json:"data,omitempty"`
+	EventID   string          `json:"event_id,omitempty"`
+	EventType string          `json:"event_type,omitempty"`
+	Hash      string          `json:"hash,omitempty"`
+	Sequence  int             `json:"sequence,omitempty"`
+	TenantID  string          `json:"tenant_id,omitempty"`
+	Timestamp string          `json:"timestamp,omitempty"`
 }
 
 // GetViolationsResponse is one page of violations.

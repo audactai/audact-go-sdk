@@ -196,7 +196,7 @@ type PIISettingsHistoryEntry struct {
 	ActorKeyID             string `json:"actor_key_id,omitempty"`
 	ChangedAt              string `json:"changed_at,omitempty"`
 	ConfigurationsResealed int    `json:"configurations_resealed,omitempty"`
-	EncryptionEnabled      bool   `json:"encryption_enabled,omitempty"`
+	EncryptionEnabled      bool   `json:"encryption_enabled"`
 	ImpersonatorID         string `json:"impersonator_id,omitempty"`
 	ImpersonatorOrgID      string `json:"impersonator_org_id,omitempty"`
 }
@@ -211,7 +211,7 @@ type PIISettingsPutRequest struct {
 type PIISettingsResponse struct {
 	ChangedAt         string                    `json:"changed_at,omitempty"`
 	ChangedBy         string                    `json:"changed_by,omitempty"`
-	EncryptionEnabled bool                      `json:"encryption_enabled,omitempty"`
+	EncryptionEnabled bool                      `json:"encryption_enabled"`
 	History           []PIISettingsHistoryEntry `json:"history,omitempty"`
 }
 
@@ -220,6 +220,6 @@ type PIISettingsPutResponse struct {
 	ChangedAt              string                    `json:"changed_at,omitempty"`
 	ChangedBy              string                    `json:"changed_by,omitempty"`
 	ConfigurationsResealed int                       `json:"configurations_resealed,omitempty"`
-	EncryptionEnabled      bool                      `json:"encryption_enabled,omitempty"`
+	EncryptionEnabled      bool                      `json:"encryption_enabled"`
 	History                []PIISettingsHistoryEntry `json:"history,omitempty"`
 }

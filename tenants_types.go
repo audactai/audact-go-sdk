@@ -166,7 +166,7 @@ type Configuration struct {
 	MultiCandidate              json.RawMessage           `json:"multi_candidate,omitempty"`
 	Name                        string                    `json:"name,omitempty"`
 	OutputConstraint            json.RawMessage           `json:"output_constraint,omitempty"`
-	PIIEncryptionEnabled        bool                      `json:"pii_encryption_enabled,omitempty"`
+	PIIEncryptionEnabled        bool                      `json:"pii_encryption_enabled"`
 	PostCallExtraction          *PostCallExtractionConfig `json:"post_call_extraction,omitempty"`
 	PostCallSummary             *PostCallSummaryConfig    `json:"post_call_summary,omitempty"`
 	PricingBands                json.RawMessage           `json:"pricing_bands,omitempty"`

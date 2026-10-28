@@ -2,6 +2,48 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-10-28
+
+### ⚠️ Breaking
+
+- `CallRecord.Metadata` and `CallDetail.Metadata`: `string` → `map[string]any`.
+  Read it as a map; no more `json.Unmarshal([]byte(rec.Metadata), …)`.
+- `ReconstructedEvent.Data`: `string` → `json.RawMessage`. Unmarshal it
+  directly with `json.Unmarshal(ev.Data, &v)`.
+- `ViolationRecord.Data`: `string` → `json.RawMessage`. Unmarshal it directly.
+- `PostEventRequest.Data`: `string` → `json.RawMessage`. Pass valid JSON, e.g.
+  `json.RawMessage(`{"k":1}`)`; it is sent as an object, not a quoted string.
+- `PolicyRuleCondition.Value`: `string` → `any`. After decoding it is a
+  `string`, `float64`, `bool` or `[]any` of strings; use a type switch.
+- `CreateWebhookRequest.Scope`, `WebhookEndpoint.Scope` and the other scope
+  fields: `string` → `WebhookScope`. Untyped string constants still compile;
+  convert variables with `WebhookScope(s)`. `Scope` is now required on create.
+- Response booleans (`IsActive`, `Active`, `Enabled`, `EncryptionEnabled`,
+  `PIIEncryptionEnabled`) no longer use `omitempty`: `false` is now always
+  encoded when a response value is marshalled again. The request field
+  `UpdateWebhookRequest.IsActive` is unchanged: when nil it is not sent.
+
+### Fixed
+
+- `Calls.List`, `Calls.Get`, `Evidence.Reconstruct` and `Policy.Get` failed to
+  decode real API responses because fields typed as strings are JSON objects
+  or booleans on the wire.
+- `Evidence.ListViolations` would fail to decode as soon as a violation existed.
+- `Evidence.PostEvent` sent `data` as a quoted string instead of a JSON value.
+- `Webhooks.Create`: `scope` is now a required, typed field.
+- `Policy.CheckCallingHours` now works because the API routes the endpoint
+  (no SDK change).
+
+### Added
+
+- `WebhookScope` with `WebhookScopeAccount`, `WebhookScopeAgent` and
+  `WebhookScopeCompliance`.
+
+### Deprecated
+
+- `Validator.FinalizeScore`: the endpoint is internal and is not routed on the
+  public API, so it returns 404. It will be removed in a future release.
+
 ## [0.3.0] - 2026-10-23
 
 ### Added

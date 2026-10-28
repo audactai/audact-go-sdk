@@ -92,7 +92,7 @@ func TestPIIService(t *testing.T) {
 			func(c *audact.Client) (any, error) {
 				return c.PII.UpdateSettings(ctx, &audact.PIISettingsPutRequest{EncryptionEnabled: false}, "")
 			},
-			"PUT", "/v1/pii/settings", "", `{"encryption_enabled":false}`, `{"configurations_resealed":4}`},
+			"PUT", "/v1/pii/settings", "", `{"encryption_enabled":false}`, `{"configurations_resealed":4,"encryption_enabled":false}`},
 	}
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

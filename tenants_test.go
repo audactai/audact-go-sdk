@@ -63,7 +63,7 @@ func TestTenantsService(t *testing.T) {
 			func(c *audact.Client) (any, error) {
 				return c.Tenants.ListConfigurations(ctx, "t1", &audact.ListConfigurationsParams{Limit: 1})
 			},
-			"GET", "/v1/tenants/t1/configurations", "limit=1", ``, `{"configurations":[{"config_id":"c1","version":2}]}`},
+			"GET", "/v1/tenants/t1/configurations", "limit=1", ``, `{"configurations":[{"config_id":"c1","pii_encryption_enabled":false,"version":2}]}`},
 		{"create configuration", 201, `{"config_id":"c1","name":"n","validator_modes":{"x":1}}`,
 			func(c *audact.Client) (any, error) {
 				return c.Tenants.CreateConfiguration(ctx, &audact.CreateConfigurationRequest{
@@ -74,18 +74,18 @@ func TestTenantsService(t *testing.T) {
 			},
 			"POST", "/v1/configurations", "",
 			`{"tenant_id":"t1","name":"n","record_calls":true,"recording_retention_days":30,"blocklist_patterns":[{"id":"b","terms":["x"]}],"validator_modes":{"x":1}}`,
-			`{"config_id":"c1","name":"n","validator_modes":{"x":1}}`},
+			`{"config_id":"c1","name":"n","pii_encryption_enabled":false,"validator_modes":{"x":1}}`},
 		{"get configuration", 200, `{"config_id":"c/1","end_call":{"closing_line":{"en":"bye"}}}`,
 			func(c *audact.Client) (any, error) { return c.Tenants.GetConfiguration(ctx, "c/1") },
-			"GET", "/v1/configurations/c%2F1", "", ``, `{"config_id":"c/1","end_call":{"closing_line":{"en":"bye"}}}`},
+			"GET", "/v1/configurations/c%2F1", "", ``, `{"config_id":"c/1","pii_encryption_enabled":false,"end_call":{"closing_line":{"en":"bye"}}}`},
 		{"get configuration version", 200, `{"config_id":"c/1","version":3,"validator_modes":{"x":1}}`,
 			func(c *audact.Client) (any, error) { return c.Tenants.GetConfigurationVersion(ctx, "c/1", 3) },
-			"GET", "/v1/configurations/c%2F1/versions/3", "", ``, `{"config_id":"c/1","version":3,"validator_modes":{"x":1}}`},
+			"GET", "/v1/configurations/c%2F1/versions/3", "", ``, `{"config_id":"c/1","pii_encryption_enabled":false,"version":3,"validator_modes":{"x":1}}`},
 		{"update configuration omits unset", 200, `{"config_id":"c1"}`,
 			func(c *audact.Client) (any, error) {
 				return c.Tenants.UpdateConfiguration(ctx, "c1", &audact.UpdateConfigurationRequest{Name: "z"})
 			},
-			"PUT", "/v1/configurations/c1", "", `{"name":"z"}`, `{"config_id":"c1"}`},
+			"PUT", "/v1/configurations/c1", "", `{"name":"z"}`, `{"config_id":"c1","pii_encryption_enabled":false}`},
 		{"delete configuration", 204, ``,
 			func(c *audact.Client) (any, error) { return nil, c.Tenants.DeleteConfiguration(ctx, "c1") },
 			"DELETE", "/v1/configurations/c1", "", ``, ``},

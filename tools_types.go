@@ -21,7 +21,7 @@ type ToolResponseVar struct {
 
 // ToolSpeakDuring controls hold audio while a tool executes.
 type ToolSpeakDuring struct {
-	Enabled bool   `json:"enabled,omitempty"`
+	Enabled bool   `json:"enabled"`
 	Text    string `json:"text,omitempty"`
 }
 

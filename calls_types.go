@@ -9,10 +9,11 @@ type CallRecord struct {
 	CreatedAt string `json:"created_at,omitempty"`
 	Direction string `json:"direction,omitempty"`
 	EndedAt   string `json:"ended_at,omitempty"`
-	Metadata  string `json:"metadata,omitempty"`
-	StartedAt string `json:"started_at,omitempty"`
-	Status    string `json:"status,omitempty"`
-	TenantID  string `json:"tenant_id,omitempty"`
+	// Arbitrary per-call metadata supplied when the call was created.
+	Metadata  map[string]any `json:"metadata,omitempty"`
+	StartedAt string         `json:"started_at,omitempty"`
+	Status    string         `json:"status,omitempty"`
+	TenantID  string         `json:"tenant_id,omitempty"`
 }
 
 // ListCallsParams are the optional query parameters of Calls.List.
@@ -52,25 +53,26 @@ type TranscriptTurn struct {
 
 // CallDetail is the full detail of one call.
 type CallDetail struct {
-	AgentID            string               `json:"agent_id,omitempty"`
-	CallID             string               `json:"call_id,omitempty"`
-	ComplianceScore    *CallComplianceScore `json:"compliance_score,omitempty"`
-	Connected          *bool                `json:"connected,omitempty"`
-	Direction          string               `json:"direction,omitempty"`
-	DurationMs         *int                 `json:"duration_ms,omitempty"`
-	EndedAt            string               `json:"ended_at,omitempty"`
-	EvidenceLink       string               `json:"evidence_link,omitempty"`
-	Metadata           string               `json:"metadata,omitempty"`
-	PIIMode            string               `json:"pii_mode,omitempty"`
-	RecordingAvailable bool                 `json:"recording_available,omitempty"`
-	RecordingRef       string               `json:"recording_ref,omitempty"`
-	SIPResponseCode    *int                 `json:"sip_response_code,omitempty"`
-	StartedAt          string               `json:"started_at,omitempty"`
-	Status             string               `json:"status,omitempty"`
-	TenantID           string               `json:"tenant_id,omitempty"`
-	TerminationClass   string               `json:"termination_class,omitempty"`
-	Transcript         []TranscriptTurn     `json:"transcript,omitempty"`
-	TranscriptStatus   string               `json:"transcript_status,omitempty"`
+	AgentID         string               `json:"agent_id,omitempty"`
+	CallID          string               `json:"call_id,omitempty"`
+	ComplianceScore *CallComplianceScore `json:"compliance_score,omitempty"`
+	Connected       *bool                `json:"connected,omitempty"`
+	Direction       string               `json:"direction,omitempty"`
+	DurationMs      *int                 `json:"duration_ms,omitempty"`
+	EndedAt         string               `json:"ended_at,omitempty"`
+	EvidenceLink    string               `json:"evidence_link,omitempty"`
+	// Arbitrary per-call metadata supplied when the call was created.
+	Metadata           map[string]any   `json:"metadata,omitempty"`
+	PIIMode            string           `json:"pii_mode,omitempty"`
+	RecordingAvailable bool             `json:"recording_available,omitempty"`
+	RecordingRef       string           `json:"recording_ref,omitempty"`
+	SIPResponseCode    *int             `json:"sip_response_code,omitempty"`
+	StartedAt          string           `json:"started_at,omitempty"`
+	Status             string           `json:"status,omitempty"`
+	TenantID           string           `json:"tenant_id,omitempty"`
+	TerminationClass   string           `json:"termination_class,omitempty"`
+	Transcript         []TranscriptTurn `json:"transcript,omitempty"`
+	TranscriptStatus   string           `json:"transcript_status,omitempty"`
 }
 
 // CallEndSummary is the end-of-call and voicemail detection context.

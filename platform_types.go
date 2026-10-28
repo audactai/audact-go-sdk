@@ -72,7 +72,7 @@ type PlatformImportResponse struct {
 
 // AdminKey is a platform admin signing key.
 type AdminKey struct {
-	Active     bool   `json:"active,omitempty"`
+	Active     bool   `json:"active"`
 	AddedAt    string `json:"added_at,omitempty"`
 	DisabledAt string `json:"disabled_at,omitempty"`
 	KID        string `json:"kid,omitempty"`

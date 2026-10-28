@@ -58,15 +58,27 @@ const (
 	WebhookDeliveryDeadLetter WebhookDeliveryStatus = "dead_letter"
 )
 
+// WebhookScope selects which events an endpoint receives.
+type WebhookScope string
+
+const (
+	// WebhookScopeAccount receives events for every agent in the tenant (the fallback).
+	WebhookScopeAccount WebhookScope = "account"
+	// WebhookScopeAgent receives one agent's events; set AgentID. It overrides account scope.
+	WebhookScopeAgent WebhookScope = "agent"
+	// WebhookScopeCompliance receives compliance.* events and overrides all other scopes for them.
+	WebhookScopeCompliance WebhookScope = "compliance"
+)
+
 // WebhookEndpoint is a registered webhook endpoint.
 type WebhookEndpoint struct {
-	AgentID  string   `json:"agent_id,omitempty"`
-	Events   []string `json:"events,omitempty"`
-	ID       string   `json:"id,omitempty"`
-	IsActive bool     `json:"is_active,omitempty"`
-	Scope    string   `json:"scope,omitempty"`
-	TenantID string   `json:"tenant_id,omitempty"`
-	URL      string   `json:"url,omitempty"`
+	AgentID  string       `json:"agent_id,omitempty"`
+	Events   []string     `json:"events,omitempty"`
+	ID       string       `json:"id,omitempty"`
+	IsActive bool         `json:"is_active"`
+	Scope    WebhookScope `json:"scope,omitempty"`
+	TenantID string       `json:"tenant_id,omitempty"`
+	URL      string       `json:"url,omitempty"`
 }
 
 // ListWebhooksParams holds optional query parameters for Webhooks.List.
@@ -86,20 +98,22 @@ type ListWebhooksResponse struct {
 type CreateWebhookRequest struct {
 	AgentID string             `json:"agent_id,omitempty"`
 	Events  []WebhookEventType `json:"events,omitempty"`
-	Scope   string             `json:"scope,omitempty"`
-	URL     string             `json:"url,omitempty"`
+	// Scope is required and must be one of the WebhookScope constants.
+	// AgentID is required when Scope is WebhookScopeAgent.
+	Scope WebhookScope `json:"scope"`
+	URL   string       `json:"url,omitempty"`
 }
 
 // CreateWebhookResponse is the created endpoint plus its one-time signing secret.
 type CreateWebhookResponse struct {
-	AgentID       string   `json:"agent_id,omitempty"`
-	Events        []string `json:"events,omitempty"`
-	ID            string   `json:"id,omitempty"`
-	IsActive      bool     `json:"is_active,omitempty"`
-	Scope         string   `json:"scope,omitempty"`
-	SigningSecret string   `json:"signing_secret,omitempty"`
-	TenantID      string   `json:"tenant_id,omitempty"`
-	URL           string   `json:"url,omitempty"`
+	AgentID       string       `json:"agent_id,omitempty"`
+	Events        []string     `json:"events,omitempty"`
+	ID            string       `json:"id,omitempty"`
+	IsActive      bool         `json:"is_active"`
+	Scope         WebhookScope `json:"scope,omitempty"`
+	SigningSecret string       `json:"signing_secret,omitempty"`
+	TenantID      string       `json:"tenant_id,omitempty"`
+	URL           string       `json:"url,omitempty"`
 }
 
 // UpdateWebhookRequest is the body of Webhooks.Update; unset fields are not sent.

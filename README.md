@@ -14,7 +14,7 @@ go get github.com/audactai/audact-go-sdk@latest
 To pin this release:
 
 ```sh
-go get github.com/audactai/audact-go-sdk@v0.3.0
+go get github.com/audactai/audact-go-sdk@v0.4.0
 ```
 
 Requires Go 1.24 or newer. The module has no third-party dependencies.
